@@ -1,0 +1,37 @@
+README
+
+#################################################################
+##                                                             ##
+##     OpenRPG's Code is distributed under the MIT licence.    ##
+##                                                             ##
+#################################################################
+
+This aim of this project has changed so many times that it is stuck in some sort
+of halfway house. The code has beem transferred to the latest version of
+Troy's Code, and has been cleaned up considerably HOWEVER it is still a bit messy
+and due to it's changed aims there are a few features without purpose and there
+is some left over code from partially removed features.
+
+That makes it sound much worse than it really is, and when I have time again I will
+return to clean it up further.
+
+I hope this source code is useful, even if the game itself isn't!
+
+#######################################################
+
+Links:
+
+ Troy's Code blog: http://troyscode.blogspot.com/
+ 
+ My Game developement blog: http://troygamedev.blogspot.co.uk/
+
+ project wiki: https://github.com/SebastianTroy/OpenRPG/wiki
+
+ project github: https://github.com/SebastianTroy/OpenRPG/
+
+#######################################################
+
+With thanks to:
+
+- Markus Perrsons (aka Notch)
+    He inspired me to program and I have leaned a lot from his open source projects.
