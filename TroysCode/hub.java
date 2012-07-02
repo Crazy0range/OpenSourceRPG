@@ -1,10 +1,7 @@
 package TroysCode;
 
 import OpenRPG.Game;
-import OpenRPG.Help;
 import OpenRPG.MainMenu;
-import OpenRPG.SaveManager;
-import OpenRPG.utils.Save;
 
 /**
  * The {@link hub} Class Contains the main method.
@@ -70,7 +67,8 @@ public class hub
 		 */
 		public static final InputListener input = new InputListener();
 		/**
-		 * This holds the main loop and regulates the speed at which the program updates.
+		 * This holds the main loop and regulates the speed at which the program
+		 * updates.
 		 */
 		public static final Renderer renderer = new Renderer();
 
@@ -81,12 +79,7 @@ public class hub
 		 * ""hub.renderer.changeRenderableObject(hub.mainMenu)""
 		 */
 		public static final MainMenu mainMenu = new MainMenu();
-		public static final Help help = new Help();
 		public static final Game game = new Game();
-		public static final SaveManager saveManager = new SaveManager();
-
-		// Current world being played
-		public static Save save;
 
 		/**
 		 * The main method, the very first method to be called when the program
@@ -95,7 +88,7 @@ public class hub
 		public static void main(String[] args)
 			{
 				frame.startFrame();
-				hub.renderer.setStartRenderableObject(hub.mainMenu);
+				hub.renderer.setStartRenderableObject(mainMenu);
 				hub.renderer.begin();
 			}
 	}

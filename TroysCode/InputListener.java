@@ -20,6 +20,25 @@ import java.awt.event.WindowFocusListener;
  */
 public class InputListener implements ActionListener, KeyListener, MouseListener, MouseMotionListener, MouseWheelListener, WindowFocusListener // ,ComponentListener
 	{
+
+		// This array of boolean values keeps track of which keys are currently
+		// held down.
+		private final boolean[] keys = new boolean[65536];
+
+		/**
+		 * The constuctor for the {@link InputListener} Class.
+		 */
+		public InputListener()
+			{
+				for (int i = 0; i < keys.length; i++)
+					keys[i] = false;
+			}
+
+		public final boolean getKeyState(int keyCode)
+			{
+				return keys[keyCode];
+			}
+
 		/*
 		 * Each of these methods simply passes all detected events to the
 		 * current "renderable object", this means that only the currently
@@ -81,6 +100,10 @@ public class InputListener implements ActionListener, KeyListener, MouseListener
 		@Override
 		public final void keyPressed(KeyEvent event)
 			{
+				int code = event.getKeyCode();
+				if (code > 0 && code < keys.length)
+					keys[code] = true;
+
 				/*
 				 * This allows developer to quickly check the keycode for any
 				 * key to use, simply hold the ALT key and press another
@@ -98,10 +121,10 @@ public class InputListener implements ActionListener, KeyListener, MouseListener
 				 * framed window.
 				 */
 
-				if (event.getKeyCode() == 27) // 'Esc' key
-					{
-						Tools.exitWindow("Do you want to Quit?");
-					}
+//				if (event.getKeyCode() == 27) // 'Esc' key
+//					{
+//						Tools.exitWindow("Do you want to Quit?");
+//					}
 
 				hub.renderer.getRenderableObject().keyPressed(event);
 			}
@@ -109,6 +132,10 @@ public class InputListener implements ActionListener, KeyListener, MouseListener
 		@Override
 		public final void keyReleased(KeyEvent event)
 			{
+				int code = event.getKeyCode();
+				if (code > 0 && code < keys.length)
+					keys[code] = false;
+
 				hub.renderer.getRenderableObject().keyReleased(event);
 			}
 
@@ -134,7 +161,10 @@ public class InputListener implements ActionListener, KeyListener, MouseListener
 		@Override
 		public void windowLostFocus(WindowEvent event)
 			{
-				hub.renderer.focused = true;
+				for (int i = 0; i < keys.length; i++)
+					keys[i] = false;
+
+				hub.renderer.focused = false;
 				hub.renderer.getRenderableObject().programLostFocus(event);
 			}
 

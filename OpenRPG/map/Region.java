@@ -4,9 +4,10 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.Serializable;
 
+import OpenRPG.map.entities.Entity;
+import OpenRPG.utils.Camera;
 import TroysCode.Constants;
 import TroysCode.hub;
-
 
 public class Region implements Constants, Serializable
 	{
@@ -14,11 +15,12 @@ public class Region implements Constants, Serializable
 
 		private Tile[][] tiles;
 
-		public static final int xSize = 1000;
-		public static final int ySize = 1000;
+		public static final int xSize = 100;
+		public static final int ySize = 100;
 
 		public Region()
 			{
+				createRegion();
 			}
 
 		public void createRegion()
@@ -29,46 +31,51 @@ public class Region implements Constants, Serializable
 				for (int x = 0; x < xSize; x++)
 					for (int y = 0; y < ySize; y++)
 						{
-							tiles[x][y] = new Tile(mapGenerator.getID(map.getRGB(x, y)));
+							tiles[x][y] = new Tile(mapGenerator.getID(map.getRGB(x, y)), x, y);
 						}
 			}
 
-		public void renderRegion(Graphics g, float camX, float camY)
+		public void render(Graphics g, Camera cam)
 			{
-				int tileX = (int) camX / 50;
-				int tileY = (int) camY / 50;
+				int tileX = (int) cam.x / Constants.TILE_SIZE;
+				int tileY = (int) cam.y / Constants.TILE_SIZE;
 
 				for (int x = tileX; x < tileX + 17; x++)
 					for (int y = tileY; y < tileY + 11; y++)
-						g.drawImage(hub.images.terrain[tiles[x][y].meta[X]][tiles[x][y].meta[Y]], Math.round((x * 50) - camX), Math.round((y * 50) - camY),
-								hub.renderer);
+						{
+							g.drawImage(hub.images.terrain[tiles[x][y].id], Math.round((x * Constants.TILE_SIZE) - cam.x), Math.round((y * Constants.TILE_SIZE) - cam.y),
+									hub.renderer);
+							
+							for (Entity e : tiles[x][y].getEntities())
+								e.render(g, cam);
+
+							if (hub.DEBUG)
+								if (tiles[x][y].isOccupied())
+									g.fillRect((int) (x * Constants.TILE_SIZE - cam.x), (int) (y * Constants.TILE_SIZE - cam.y), 40, 40);
+						}
 			}
 
-		public boolean isFree(int x, int y)
+		public synchronized Tile[][] getTiles()
 			{
-				if (x < 0 || y < 0)
-					return false;
-
-				if (x >= xSize || y >= ySize)
-					return false;
-
-				if (tiles[x][y].meta[STATE] == SOLID)
-					return false;
-
-				if (tiles[x][y].mob != null)
-					return false;
-
-				return true;
+				return tiles;
 			}
 
-		public Tile getTile(int x, int y)
+		public synchronized Tile getTile(int x, int y)
 			{
-				if (x < 0 || y < 0)
-					return null;
+				if (x < 0 || y < 0 || x >= xSize || y >= ySize)
+					return new Tile(VOID_TILE, -1, -1);
 
 				if (x == xSize || y == ySize)
-					return null;
+					return new Tile(VOID_TILE, -1, -1);
 
 				return tiles[x][y];
+			}
+
+		public boolean isTileOccupied(int x, int y)
+			{
+				if (x < 0 || y < 0 || x >= xSize - 1 || y >= ySize - 2)
+					return true;
+
+				return tiles[x][y].isOccupied();
 			}
 	}

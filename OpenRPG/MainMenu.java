@@ -1,52 +1,42 @@
 package OpenRPG;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
-import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.WindowEvent;
-import java.awt.image.BufferedImage;
 
-import OpenRPG.map.mapGenerator;
-import OpenRPG.utils.Save;
+import TroysCode.Constants;
 import TroysCode.RenderableObject;
-import TroysCode.Tools;
 import TroysCode.hub;
 import TroysCode.T.TButton;
+import TroysCode.T.TMenu;
 import TroysCode.T.TScrollEvent;
 
-public class MainMenu extends RenderableObject
+public class MainMenu extends RenderableObject implements Constants
 	{
 		private static final long serialVersionUID = 1L;
 
-		private BufferedImage map = mapGenerator.newMap();
-		
-		private TButton newGameButton = new TButton(250, 15, hub.images.mainMenu[2]);
-		private TButton helpButton = new TButton(250, 125, hub.images.mainMenu[3]);
-		private TButton saveManagerButton = new TButton(250, 235, hub.images.mainMenu[4]);
-		private TButton optionsButton = new TButton(250, 345, hub.images.mainMenu[5]);
-		private TButton backButton = new TButton(250, 455, hub.images.mainMenu[6]);
+		private final TMenu mainOptions = new TMenu(200, 0, 400, 575, TMenu.VERTICAL);
 
-		public MainMenu()
-			{
-			}
+		private final TButton newGameButton = new TButton(0, 0, hub.images.mainMenu[MMB_NEW_GAME]);
+		private final TButton helpButton = new TButton(0, 0, hub.images.mainMenu[MMB_HELP]);
+		private final TButton saveLoadButton = new TButton(0, 0, hub.images.mainMenu[MMB_SAVE_LOAD]);
+		private final TButton optionsButton = new TButton(0, 0, hub.images.mainMenu[MMB_OPTIONS]);
+		private final TButton backButton = new TButton(0, 0, hub.images.mainMenu[MMB_BACK]);
 
 		@Override
 		protected void initiate()
 			{
-				addTComponent(newGameButton);
-				addTComponent(helpButton);
-				addTComponent(saveManagerButton);
-				addTComponent(optionsButton);
-				addTComponent(backButton);
-			}
+				addTComponent(mainOptions);
 
-		@Override
-		public void renderObject(Graphics g)
-			{
-				g.drawImage(map, 0, -100, hub.renderer);
+				mainOptions.addTButton(newGameButton, false);
+				mainOptions.addTButton(saveLoadButton, false);
+				mainOptions.addTButton(helpButton, false);
+				mainOptions.addTButton(optionsButton, false);
+				mainOptions.addTButton(backButton, false);
 			}
 
 		@Override
@@ -61,6 +51,40 @@ public class MainMenu extends RenderableObject
 			{
 				// TODO Auto-generated method stub
 
+			}
+
+		@Override
+		protected void renderObject(Graphics g)
+			{
+				g.setColor(Color.BLUE);
+				g.fillRect(0, 0, 800, 600);
+			}
+
+		@Override
+		protected void actionPerformed(ActionEvent event)
+			{
+				if (event.getSource() == newGameButton)
+					{
+						changeRenderableObject(hub.game);
+						return;
+					}
+				else if (event.getSource() == saveLoadButton)
+					{
+						return;
+					}
+				else if (event.getSource() == helpButton)
+					{
+						return;
+					}
+				else if (event.getSource() == optionsButton)
+					{
+						return;
+					}
+				else if (event.getSource() == backButton)
+					{
+						changeRenderableObject(hub.game);
+						return;
+					}
 			}
 
 		@Override
@@ -92,43 +116,10 @@ public class MainMenu extends RenderableObject
 			}
 
 		@Override
-		protected void mouseWheelMoved(MouseWheelEvent event)
+		protected void mouseWheelScrolled(MouseWheelEvent event)
 			{
 				// TODO Auto-generated method stub
 
-			}
-
-		@Override
-		protected void actionPerformed(ActionEvent event)
-			{
-				if (event.getSource() == newGameButton)// new game
-					{
-						hub.save = new Save();
-						hub.save.newGame();
-						hub.renderer.changeRenderableObject(hub.game);
-					}
-
-				if (event.getSource() == helpButton)// help
-					{
-						hub.renderer.changeRenderableObject(hub.help);
-					}
-
-				if (event.getSource() == saveManagerButton)// save/load
-					{
-						hub.renderer.changeRenderableObject(hub.saveManager);
-					}
-
-				if (event.getSource() == optionsButton)// options
-					{
-					}
-
-				if (event.getSource() == backButton)// back
-					{
-						if (hub.save != null)
-							hub.renderer.changeRenderableObject(hub.game);
-						else
-							Tools.infoBox("No current save detected!", "Warning");
-					}
 			}
 
 		@Override
@@ -188,16 +179,10 @@ public class MainMenu extends RenderableObject
 			}
 
 		@Override
-		protected void frameResized(ComponentEvent event)
-			{
-				// TODO Auto-generated method stub
-
-			}
-
-		@Override
 		public void tScrollBarScrolled(TScrollEvent event)
 			{
 				// TODO Auto-generated method stub
 
 			}
+
 	}

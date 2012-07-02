@@ -1,8 +1,6 @@
 package TroysCode;
 
 import java.awt.Toolkit;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -62,34 +60,6 @@ public class Frame extends JFrame
 							{
 								Tools.exitWindow("Are you sure you want to Exit?");
 							}
-					});
-
-				// Detects ComponentEvents
-				addComponentListener(new ComponentListener()
-					{
-
-						@Override
-						public void componentResized(ComponentEvent event)
-							{
-								if (hub.renderer.getRenderableObject() != null)
-									hub.renderer.getRenderableObject().frameResized(event);
-							}
-
-						@Override
-						public void componentMoved(ComponentEvent event)
-							{
-							}
-
-						@Override
-						public void componentShown(ComponentEvent event)
-							{
-							}
-
-						@Override
-						public void componentHidden(ComponentEvent event)
-							{
-							}
-
 					});
 
 				/*

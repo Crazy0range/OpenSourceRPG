@@ -2,104 +2,68 @@ package TroysCode;
 
 /**
  * This interface contains variables with a constant value. These constants can
- * be reached in any Class, as long as they <code> implement Constants</code>.
+ * be reached in any Class, as long as they <code>implement Constants</code>.
  * 
  * @author Sebastian Troy
  */
 public interface Constants
 	{
-		/*
-		 * This class allows the declaration of constants. I often use constants
-		 * to refer to objects in an array, for example: ""arrayOfColours[0]""
-		 * refers to the first member of that array, but that could be any
-		 * colour. If I have the constant ""public static final byte BLUE = 0""
-		 * and call ""arrayOfColours[BLUE]"" I then have an idea of what it is
-		 * I'm actually accesing.
-		 */
-		// GLOBAL IDENTIFIERS
-		public static final byte ID = 0;
-		public static final byte X = 1;
-		public static final byte Y = 2;
-
-		/* ############################################################### */
-
-		// TILE IDENTIFIERS
-		public static final byte STATE = 3;
-
-		// TILE CONSTANTS
-		public static final byte EMPTY = 0;
-		public static final byte SOLID = 1;
-
-		// TILE DATA
-		public static final byte[] TILE_DEBUG = { 0, 0, 0, SOLID };
-		public static final byte[] GRASS = { 1, 1, 0, EMPTY };
-		public static final byte[] GRASS1 = { 1, 1, 1, EMPTY };
-		public static final byte[] GRASS2 = { 1, 1, 2, EMPTY };
-		public static final byte[] GRASS3 = { 1, 1, 3, EMPTY };
-		public static final byte[] TREE = { 2, 2, 0, SOLID };
-		public static final byte[] TREE1 = { 2, 2, 1, SOLID };
-		public static final byte[] TREE2 = { 2, 2, 2, SOLID };
-		public static final byte[] TREE3 = { 2, 2, 3, SOLID };
-		public static final byte[] BOULDER = { 3, 3, 0, SOLID };
-		public static final byte[] BOULDER2 = { 3, 3, 1, SOLID };
-		public static final byte[] BOULDER3 = { 3, 3, 2, SOLID };
-		public static final byte[] BOULDER4 = { 3, 3, 3, SOLID };
-
-		/* ############################################################### */
-
-		// ITEM IDENTIFIERS
-		// ID = 0;
-		// X = 1;
-		// Y = 2;
-		public static final byte STACK = 3;
-		public static final byte WEIGHT = 4;
-		public static final byte DAMAGE = 5;
-		public static final byte TYPE = 6;
-
-		// ITEM CONSTANTS
-		public static final byte RESOURCE = 0;
-		public static final byte TOOL = 1;
-		public static final byte WEAPON = 2;
-
-		// ITEM DATA
-		public static final byte[] NO_ITEM = { 0, 0, 0, 0, 0, 0, TOOL };
-		public static final byte[] STONES = { 1, 1, 0, 6, 2, 0, RESOURCE };
-		public static final byte[] SWORD = { 2, 2, 0, 1, 1, 4, WEAPON };
-		public static final byte[] PICK = { 3, 3, 0, 1, 1, 0, TOOL };
-		public static final byte[] AXE = { 4, 4, 0, 1, 1, 0, TOOL };
-		public static final byte[] WOOD = { 5, 5, 0, 16, 2, 0, RESOURCE };
-
 		// ###########################################################
 
-		// MOB IDENTIFIERS
-		// ID = 0;
-		// X = 1;
-		// Y = 2;
+		// Entity map positions, V = vertical, H = horizontal
+		public final int V_EXACT_H_EXACT = 0;
+		public final int V_EXACT_H_OVERLAPPING = 1;
+		public final int V_OVERLAPPING_H_EXACT = 2;
+		public final int V_OVERLAPPING_H_OVERLAPPING = 3;
+		public static final int TILE_SIZE = 50;
 
-		// MOB CONSTANTS
+		// Entity data indexes
+		public static final byte ENTITY_ID = 0;
+		public static final byte ENTITY_STATE = 1;
+
+		// Entity data
+		public static final byte SOLID = 0;
+
+		public static final byte[] PLAYER_DATA = { 0, 0 };
+		public static final byte[] ROCK_DATA = { 1, 0 };
+
 		// facing
 		public static final byte NORTH = 0;
 		public static final byte EAST = 1;
 		public static final byte SOUTH = 2;
 		public static final byte WEST = 3;
+		public static final byte NONE = 4;
 
-		// action
+		// actionc
 		public static final byte STANDING = 0;
-		public static final byte MOVING = 1;
-		public static final byte INTERACTING = 2;
+		public static final byte WALKING = 1;
 
-		// MOB DATA
-		public static final byte[] MOB_DEBUG = { 0, 1, 1 };
-		public static final byte[] SWORDSMAN = { 1, 1, 1 };
-		
 		// ###########################################################
 
-		//KEY CONSTANTS
-		public static final byte NONE = 0;
-		public static final byte UP = 1;
-		public static final byte RIGHT = 2;
-		public static final byte DOWN = 3;
-		public static final byte LEFT = 4;
-		public static final byte SPACE = 5;
-		public static final byte Q = 5;
+		// Terrain constants
+		public static final byte VOID_TILE = 0;
+		public static final byte GRASS_1 = 1;
+		public static final byte GRASS_2 = 2;
+		public static final byte GRASS_3 = 3;
+		public static final byte GRASS_4 = 4;
+
+		// ###########################################################
+
+		// Key constants
+		public static final byte KEY_NONE = 0;
+		public static final byte KEY_UP = 38;
+		public static final byte KEY_RIGHT = 39;
+		public static final byte KEY_DOWN = 40;
+		public static final byte KEY_LEFT = 37;
+		public static final byte KEY_SPACE = 32;
+		public static final byte KEY_DELETE = 127;
+		// ###########################################################
+
+		// Image constants
+		// Main Menu Buttons:
+		public static final byte MMB_NEW_GAME = 0;
+		public static final byte MMB_HELP = 1;
+		public static final byte MMB_SAVE_LOAD = 2;
+		public static final byte MMB_OPTIONS = 3;
+		public static final byte MMB_BACK = 4;
 	}

@@ -2,7 +2,6 @@ package TroysCode;
 
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
-import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
@@ -144,7 +143,7 @@ public abstract class RenderableObject extends TComponentContainer
 		 *            - The {@link MouseEvent} detected by the
 		 *            {@link InputListener}
 		 */
-		protected abstract void mouseWheelMoved(MouseWheelEvent event);
+		protected abstract void mouseWheelScrolled(MouseWheelEvent event);
 
 		/**
 		 * This method is called whenever the {@link InputListener} Class
@@ -239,14 +238,4 @@ public abstract class RenderableObject extends TComponentContainer
 		 *            {@link InputListener}
 		 */
 		protected abstract void programLostFocus(WindowEvent event);
-
-		/**
-		 * This method is called whenever the {@link Frame} Class detects that
-		 * the program's {@link Frame} has been resized.
-		 * 
-		 * @param event
-		 *            - The {@link ComponentEvent} detected by the
-		 *            {@link InputListener}
-		 */
-		protected abstract void frameResized(ComponentEvent event);
 	}

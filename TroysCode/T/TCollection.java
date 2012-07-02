@@ -4,8 +4,6 @@ import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -18,7 +16,7 @@ import TroysCode.hub;
  * 
  * @author Sebastian Troy
  */
-public class TCollection extends TComponent implements Serializable, MouseListener, MouseMotionListener
+public class TCollection extends TComponent implements Serializable
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -26,7 +24,7 @@ public class TCollection extends TComponent implements Serializable, MouseListen
 		 * An {@link ArrayList} of all the {@link TComponent}s within this
 		 * TCollection.
 		 */
-		private ArrayList<TComponent> components = new ArrayList<TComponent>();
+		private volatile ArrayList<TComponent> components = new ArrayList<TComponent>();
 
 		/**
 		 * The position of the {@link TCollection}. When the position of this
@@ -38,9 +36,24 @@ public class TCollection extends TComponent implements Serializable, MouseListen
 		 * @param y
 		 *            - this y position of this {@link TCollection}.
 		 */
-		public TCollection(float x, float y)
+		public TCollection(double x, double y)
 			{
 				super(x, y, 0, 0);
+			}
+
+		/**
+		 * The position of the {@link TCollection}. When the position of this
+		 * {@link TCollection} is updated all of the positions of the
+		 * {@link TComponent}s it contains are updated too.
+		 * 
+		 * @param x
+		 *            - this x position of this {@link TCollection}.
+		 * @param y
+		 *            - this y position of this {@link TCollection}.
+		 */
+		public TCollection(double x, double y, double width, double height)
+			{
+				super(x, y, width, height);
 			}
 
 		/**
@@ -59,39 +72,33 @@ public class TCollection extends TComponent implements Serializable, MouseListen
 					{
 						if (tComponentContainer != null)
 							{
-								tComponentContainer.getParent().removeMouseListener(this);
-								tComponentContainer.getParent().removeMouseMotionListener(this);
-
-								TComponent[] components = new TComponent[this.components.size()];
-								for (TComponent c : components)
+								for (TComponent c : getTComponents())
 									tComponentContainer.removeTComponent(c);
 							}
 						tComponentContainer = componentContainer;
-						tComponentContainer.getParent().addMouseListener(this);
-						tComponentContainer.getParent().addMouseMotionListener(this);
 					}
 
-				TComponent[] components = new TComponent[this.components.size()];
-				for (TComponent c : components)
+				for (TComponent c : getTComponents())
 					tComponentContainer.addTComponent(c);
 			}
 
 		@Override
 		protected final void removedFromTComponentContainer()
 			{
-				TComponent[] components = new TComponent[this.components.size()];
-				this.components.toArray(components);
-				for (TComponent c : components)
+				for (TComponent c : getTComponents())
 					tComponentContainer.removeTComponent(c);
-				
+
 				tComponentContainer = null;
 			}
 
 		public synchronized final void addTComponent(TComponent component)
 			{
-				components.add(component);
-				if (tComponentContainer != null)
-					tComponentContainer.addTComponent(component);
+				if (!components.contains(component))
+					{
+						components.add(component);
+						if (tComponentContainer != null)
+							tComponentContainer.addTComponent(component);
+					}
 			}
 
 		public synchronized final void removeTComponent(TComponent component)
@@ -116,8 +123,13 @@ public class TCollection extends TComponent implements Serializable, MouseListen
 		public final void render(Graphics g)
 			{
 				if (hub.DEBUG)
-					g.drawRect(Math.round(x), Math.round(y), Math.round(width), Math.round(height));
-				
+					g.drawRect((int) Math.round(x), (int) Math.round(y), (int) Math.round(width), (int) Math.round(height));
+
+				if (backgroundColour != null)
+					{
+						g.setColor(backgroundColour);
+						g.fillRect((int) Math.round(x), (int) Math.round(y), (int) Math.round(width), (int) Math.round(height));
+					}
 				for (TComponent tc : getTComponents())
 					tc.render(g);
 			}
@@ -129,29 +141,29 @@ public class TCollection extends TComponent implements Serializable, MouseListen
 		 */
 
 		@Override
-		public final void setX(float x)
+		public final void setX(double x)
 			{
-				float diffX = x - this.x;
+				double diffX = x - this.x;
 				this.moveX(diffX);
 			}
 
 		@Override
-		public final void setY(float y)
+		public final void setY(double y)
 			{
-				float diffY = y - this.y;
+				double diffY = y - this.y;
 				this.moveY(diffY);
 			}
 
 		@Override
-		public final void setPosition(float x, float y)
+		public final void setPosition(double x, double y)
 			{
-				float diffX = x - this.x;
-				float diffY = y - this.y;
+				double diffX = x - this.x;
+				double diffY = y - this.y;
 				this.movePosition(diffX, diffY);
 			}
 
 		@Override
-		public final void moveX(float x)
+		public final void moveX(double x)
 			{
 				this.x += x;
 				for (TComponent tc : getTComponents())
@@ -159,7 +171,7 @@ public class TCollection extends TComponent implements Serializable, MouseListen
 			}
 
 		@Override
-		public final void moveY(float y)
+		public final void moveY(double y)
 			{
 				this.y += y;
 				for (TComponent tc : getTComponents())
@@ -167,7 +179,7 @@ public class TCollection extends TComponent implements Serializable, MouseListen
 			}
 
 		@Override
-		public final void movePosition(float x, float y)
+		public final void movePosition(double x, double y)
 			{
 				this.x += x;
 				this.y += y;
@@ -176,92 +188,87 @@ public class TCollection extends TComponent implements Serializable, MouseListen
 
 			}
 
-		/*
-		 * The following methods pass on mouse events and key events onto any
-		 * TComponents it contains
-		 */
-
 		@Override
-		public final void mousePressed(MouseEvent me)
+		public void keyTyped(KeyEvent e)
 			{
-				for (TComponent tc : getTComponents())
-					tc.mousePressed(me);
+				// TODO Auto-generated method stub
+				
 			}
 
 		@Override
-		public final void mouseReleased(MouseEvent me)
+		public void keyPressed(KeyEvent e)
 			{
-				for (TComponent tc : getTComponents())
-					tc.mouseReleased(me);
+				// TODO Auto-generated method stub
+				
 			}
 
 		@Override
-		public final void mouseDragged(MouseEvent me)
+		public void keyReleased(KeyEvent e)
 			{
-				for (TComponent tc : getTComponents())
-					tc.mouseDragged(me);
+				// TODO Auto-generated method stub
+				
 			}
 
 		@Override
-		public void mouseMoved(MouseEvent me)
+		public void mouseDragged(MouseEvent e)
 			{
-				for (TComponent tc : getTComponents())
-					tc.mouseMoved(me);
+				// TODO Auto-generated method stub
+				
 			}
 
 		@Override
-		public final void mouseWheelMoved(MouseWheelEvent me)
+		public void mouseMoved(MouseEvent e)
 			{
-				for (TComponent tc : getTComponents())
-					tc.mouseDragged(me);
+				// TODO Auto-generated method stub
+				
 			}
 
 		@Override
-		public void mouseClicked(MouseEvent me)
+		public void mouseClicked(MouseEvent e)
 			{
-				for (TComponent tc : getTComponents())
-					tc.mouseClicked(me);
+				// TODO Auto-generated method stub
+				
 			}
 
 		@Override
-		public void mouseEntered(MouseEvent me)
+		public void mousePressed(MouseEvent e)
 			{
-				for (TComponent tc : getTComponents())
-					tc.mouseEntered(me);
+				// TODO Auto-generated method stub
+				
 			}
 
 		@Override
-		public void mouseExited(MouseEvent me)
+		public void mouseReleased(MouseEvent e)
 			{
-				for (TComponent tc : getTComponents())
-					tc.mouseExited(me);
+				// TODO Auto-generated method stub
+				
 			}
 
 		@Override
-		public final void actionPerformed(ActionEvent ae)
+		public void mouseEntered(MouseEvent e)
 			{
-				for (TComponent tc : getTComponents())
-					tc.actionPerformed(ae);
+				// TODO Auto-generated method stub
+				
 			}
 
 		@Override
-		public final void keyPressed(KeyEvent ke)
+		public void mouseExited(MouseEvent e)
 			{
-				for (TComponent tc : getTComponents())
-					tc.keyPressed(ke);
+				// TODO Auto-generated method stub
+				
 			}
 
 		@Override
-		public final void keyReleased(KeyEvent ke)
+		public void mouseWheelMoved(MouseWheelEvent e)
 			{
-				for (TComponent tc : getTComponents())
-					tc.keyReleased(ke);
+				// TODO Auto-generated method stub
+				
 			}
 
 		@Override
-		public final void keyTyped(KeyEvent ke)
+		public void actionPerformed(ActionEvent e)
 			{
-				for (TComponent tc : getTComponents())
-					tc.keyTyped(ke);
+				// TODO Auto-generated method stub
+				
 			}
 	}
